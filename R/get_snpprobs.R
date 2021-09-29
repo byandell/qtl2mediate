@@ -40,6 +40,8 @@
 #' snppr <- snppr$snpprobs
 #'
 #' @importFrom qtl2 genoprob_to_snpprob index_snps
+#' 
+#' @export
 #'
 get_snpprobs <- function(chr_id=NULL, peak_Mbp=NULL, window_Mbp=NULL,
                          phename, probs_obj, probs_map,

@@ -189,34 +189,9 @@ str(query_mrna(chr_id, scan_window[1], scan_window[2]))
 Phenotype mediation uses as mediators other phenotypes in the region defined by `chr_id` and `scan_window`. This is all bundled in the routine `comediator_region`, using `project_info` and `analyses_tbl` settings. It then calls `pheno_region` with `peaks` and `qtls`.
 
 ```{r}
-# This is specific to CCmouse.
-peaks <- dplyr::filter(peaks,
-                       .data$pheno != pheno_name,
-                       !(.data$pheno_group == "Islet.mRNA"))
-  
-# Filter peaks and analyses to region and drop pheno_name
-peaks_local <- dplyr::filter(peaks,
-                             .data$chr == chr_id,
-                             .data$pos >= scan_window[1],
-                             .data$pos <= scan_window[2])
-analyses_df <- dplyr::filter(analyses_tbl,
-                             .data$pheno %in% peaks_local$pheno,
-                             .data$pheno != pheno_name)
-  
-# Read the phenos we need.
-phenos <- analyses_df$pheno
-pheno_other <- pheno_data[, phenos, drop = FALSE]
-
-# Create comediator object.
-comed_ls <- qtl2mediate:::pheno_region(
-    chr_id, scan_window, covar, pmap,
-    peaks, analyses_tbl, pheno_other, drivers = qtls)
-```
-
-```{r eval=FALSE}
 comed_ls <- qtl2mediate::comediator_region(pheno_name, chr_id, scan_window, 
                       covar, analyses_tbl, peaks, 
-                      qtls, pmap, project_info)
+                      qtls, pmap, pheno_data)
 ```
 
 ```{r}
@@ -285,17 +260,17 @@ ggplot2::autoplot(med_scan, size = 3)
 ```
 
 ```{r}
-med_test <- intermediate::mediation_test(
+med_test <- qtl2mediate::mediation_test_qtl2(
   target = phe_mx,
   mediator = med_ls[[1]],
-  driver = geno_max,
   annotation = med_ls[[2]],
   covar_tar = cov_tar,
   covar_med = med_ls$covar,
-  kinship = kinship,
-  driver_med = driver_med,
+  genoprobs = probs_obj$probs,
+  map = probs_obj$map,
+  chr = chr_id,
   pos = pos_Mbp,
-  fitFunction =  qtl2mediate::fitQtl2)
+  kinship = kinship)
 ```
 
 **looks like this summary is broken**
@@ -335,6 +310,18 @@ snp_scan_obj <- qtl2mediate:::scan1covar(pheno_data, cov_tar,
 qtl2ggplot::ggplot_scan1(snp_scan_obj, snpprobs$snpinfo, patterns = "hilit", drop_hilit = 3,
                   haplos = snpprobs$haplos)
 ```
+Want to use qtl2::top_snps instead of qtl2pattern::top_snps_pattern,
+but then have to do the work. Put this in `triad_helper()` in 'medation_triad_qtl2.R`.
+
+```{r}
+(tmp_snps_1 <- 
+  dplyr::arrange(
+    qtl2::top_snps(snp_scan_obj, 
+                   snpprobs$snpinfo,
+                   lodcolumn = pheno_name,
+                   show_all_snps = FALSE),
+    dplyr::desc(.data$lod)))
+```
 
 ```{r}
 top_snps_tbl <- qtl2pattern::top_snps_pattern(
@@ -359,11 +346,8 @@ pattern <- dplyr::filter(patterns, .data$pheno == med_name)$pattern[1]
 
 sdps <- unique(dplyr::filter(patterns, .data$pheno == med_name)$sdp)
 
-sdp <- sdps[qtl2pattern::sdp_to_pattern(sdps, haplos) == pattern]
+sdp <- sdps[qtl2mediate:::sdp_to_pattern(sdps, haplos) == pattern]
 id <- med_ls[[2]]$id[med_ls[[2]][["id"]] == med_name]
-
-cov_tar <- qtl2mediate:::covar_df_mx(cov_tar)
-cov_med <- qtl2mediate:::covar_df_mx(med_ls$covar)
 ```
 
 ```{r}
@@ -371,10 +355,37 @@ med_triad <- intermediate::mediation_triad(target = phe_mx,
                               mediator = med_ls[[1]][, id, drop = FALSE],
                               driver = geno_max, 
                               covar_tar = cov_tar,
-                              covar_med = cov_med,
+                              covar_med = med_ls$covar,
                               kinship = kinship,
                               sdp = sdp, allele = TRUE,
                               fitFunction = qtl2mediate::fitQtl2)
+```
+
+```{r}
+sdp <- triad_sdp(chr_id, pos_Mbp,
+                 scan_window,
+                 pheno_name, pheno_data = phe_mx,
+                 probs_obj$probs, probs_obj$map,
+                 analyses_tbl, 
+                 kinship = kinship)
+```
+
+**Need to customize to particular mediator chosen.**
+
+```{r}
+id <- XXX
+med_triad <- mediation_triad_qtl2(
+  target = phe_mx,
+  mediator = med_ls[[1]][, id, drop = FALSE],
+  annotation = med_ls[[2]],
+  covar_tar = cov_tar,
+  covar_med = med_ls$covar,
+  genoprobs = probs_obj$probs,
+  map = probs_obj$map,
+  chr = chr_id,
+  pos = pos_Mbp,
+  kinship = kinship,
+  sdp)
 ```
 
 ```{r}

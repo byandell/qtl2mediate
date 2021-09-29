@@ -1,4 +1,4 @@
-# Mediation tests for qtl2 data across index
+# Mediation triads for qtl2 data across index
 #
 #' Test mediation across set of indexed drivers for `qtl2` data
 #'
@@ -18,7 +18,7 @@
 #' @param ... additional parameters for [mediation_index()]
 #'
 #' @importFrom qtl2 find_marker
-#' @importFrom intermediate mediation_test
+#' @importFrom intermediate mediation_triad
 #' 
 #' @return Object of class `mediation_qtl2`, which inherits from class [mediation_index()]
 #' 
@@ -36,34 +36,27 @@
 #' 
 #' @export
 #'
-mediation_test_qtl2 <- function(target,
-                                mediator,
-                                annotation,
-                                covar_tar = NULL,
-                                covar_med = NULL,
-                                genoprobs,
-                                map,
-                                chr,
-                                pos,
-                                kinship = NULL,
-                                ...) {
-  
+mediation_triad_qtl2 <- function(target,
+                                 mediator,
+                                 annotation,
+                                 covar_tar = NULL,
+                                 covar_med = NULL,
+                                 genoprobs,
+                                 map,
+                                 chr,
+                                 pos,
+                                 kinship = NULL,
+                                 sdp = NULL,
+                                 ...) {
   # Get driver as genoprobs based on chr and pos.
   peak_mar <- qtl2::find_marker(map, chr, pos)
   driver <- subset(genoprobs, chr = chr, mar = peak_mar)[[1]][,,1]
   
-  # Get driver_med for use with annotation data on mediators.
-  driver_med <- genoprobs[[chr]]
-  
-  intermediate::mediation_test(target,
-                               mediator,
-                               driver,
-                               annotation,
-                               covar_tar,
-                               covar_med,
-                               driver_med = driver_med,
-                               pos = pos,
-                               kinship = kinship,
-                               fitFunction = fitQtl2,
-                               ...)
+  intermediate::mediation_triad(target,
+                                mediator = mediator,
+                                driver = driver, 
+                                covar_tar = covar_tar,
+                                covar_med = covar_med,
+                                kinship = kinship,
+                                sdp = sdp, ...)
 }

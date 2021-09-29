@@ -25,6 +25,7 @@
 #'   names_from = "Sex", values_from = "n")
 #' 
 #' @export
+#' 
 get_covar <- function(covar, analyses_tbl) {
   ## Get covariate matrix covar.
   logical.col <- sapply(analyses_tbl, function(x) any(as.logical(x)))

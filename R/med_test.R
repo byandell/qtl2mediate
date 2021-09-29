@@ -42,8 +42,8 @@ med_triad <- function(med_ls, geno_max, phe_mx, kinship, cov_tar, sdps,
   if(length(id) != 1)
     return(NULL)
   
-  cov_tar <- covar_df_mx(cov_tar)
-  cov_med <- covar_df_mx(med_ls$covar)
+  cov_tar <- covar_matrix(cov_tar)
+  cov_med <- covar_matrix(med_ls$covar)
   
   intermediate::mediation_triad(target = phe_mx,
                               mediator = med_ls[[1]][, id, drop = FALSE],
@@ -82,6 +82,6 @@ misc_triad_code <- function() {
   sdp <- sdps[qtl2pattern::sdp_to_pattern(sdps, haplos) == pattern]
   id <- med_ls[[2]]$id[med_ls[[2]][["id"]] == med_name]
   
-  cov_tar <- qtl2shiny:::covar_df_mx(cov_tar)
-  cov_med <- qtl2shiny:::covar_df_mx(med_ls$covar)
+  cov_tar <- covar_matrix(cov_tar)
+  cov_med <- covar_matrix(med_ls$covar)
 }

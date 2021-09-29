@@ -2,19 +2,16 @@
 % Please edit documentation in R/scan1covar.R
 \name{scan1covar}
 \alias{scan1covar}
+\alias{covar_matrix}
 \alias{which_covar}
-\alias{covar_df_mx}
-\alias{wh_covar}
 \alias{sexcovar}
 \title{Scan1 for multiple traits with possibly different covariates, and some helper routines.}
 \usage{
 scan1covar(phe_mx, cov_df, probs_obj, kinship, analyses_df, ...)
 
-which_covar(analyses_df)
+covar_matrix(addcovar)
 
-covar_df_mx(addcovar)
-
-wh_covar(analyses_df, wh, cov_df)
+which_covar(analyses_df, wh, cov_df)
 
 sexcovar(addcovar, sex_type = "all")
 }

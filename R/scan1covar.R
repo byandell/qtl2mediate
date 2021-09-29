@@ -13,6 +13,8 @@
 #' @importFrom dplyr select
 #' @importFrom stats formula model.matrix
 #' @importFrom rlang .data
+#' 
+#' @export
 #'
 scan1covar <- function(phe_mx, cov_df, probs_obj, kinship, analyses_df, ...) {
   # This is set up for different types of models (e.g. "binary"),
@@ -37,18 +39,10 @@ scan1covar <- function(phe_mx, cov_df, probs_obj, kinship, analyses_df, ...) {
   # reorder by decreasing max lod
   modify_object(scans, scans[,order(-apply(scans,2,max)), drop=FALSE])
 }
-#' @importFrom stats formula model.matrix
-#' @rdname scan1covar
-which_covar <- function(analyses_df) {
-  ## Covariate indicators follow winsorize column.
-  wh <- which("winsorize" == names(analyses_df))
-  is_covar <- apply(analyses_df[, -(seq_len(wh)), drop=FALSE], 2, any)
-  ## Keep only covariate indicators with at least one TRUE value.
-  analyses_df[, names(is_covar)[is_covar], drop=FALSE]
-}
 #' @param addcovar Data frame of additive covariate.
 #' @rdname scan1covar
-covar_df_mx <- function(addcovar) {
+#' @export
+covar_matrix <- function(addcovar) {
   if(is.null(addcovar))
     return(NULL)
   if(is.data.frame(addcovar)) {
@@ -59,25 +53,37 @@ covar_df_mx <- function(addcovar) {
 }
 
 #' @param wh Index for which row of \code{analyses_df} to use.
+#' @importFrom stats formula model.matrix
 #' @rdname scan1covar
-wh_covar <- function(analyses_df, wh, cov_df) {
-  # Get which covariates from condensed analyses table.
-  # The analyses table as T/F with names; capture names that have TRUE.
-  covars <- unlist(analyses_df[wh[1],, drop = FALSE])
-  covars <- names(covars)[covars]
-  data.frame(cov_df[, covars, drop=FALSE],
-             stringsAsFactors = FALSE)
+#' @export
+which_covar <- function(analyses_df, wh, cov_df) {
+  if(missing(wh)) {
+    ## Covariate indicators follow winsorize column.
+    wh <- which("winsorize" == names(analyses_df))
+    is_covar <- apply(analyses_df[, -(seq_len(wh)), drop=FALSE], 2, any)
+    ## Keep only covariate indicators with at least one TRUE value.
+    analyses_df[, names(is_covar)[is_covar], drop=FALSE]
+  } else {
+    # Get which covariates from condensed analyses table.
+    # The analyses table as T/F with names; capture names that have TRUE.
+    covars <- unlist(analyses_df[wh[1],, drop = FALSE])
+    covars <- names(covars)[covars]
+    data.frame(cov_df[, covars, drop=FALSE],
+               stringsAsFactors = FALSE)
+  }
 }
 
 #' @param sex_type subset by sex if \code{"F"} or \code{"M"}.
 #' @rdname scan1covar
+#' @export
 sexcovar <- function(addcovar, sex_type = "all") {
-  if(!all(sort(unique(addcovar$sex)) %in% c("M","F")) & sex_type %in% c("M","F")) {
+  sexChar <- toupper(stringr::str_sub(addcovar$sex, 1, 1))
+  if(!all(sort(unique(sexChar)) %in% c("M","F")) & sex_type %in% c("M","F")) {
     stop("cannot handle levels of sex not M and F")
   }
   switch(sex_type,
-         "F" = addcovar <- addcovar[addcovar$sex == "F",, drop = FALSE],
-         "M" = addcovar <- addcovar[addcovar$sex == "M",, drop = FALSE])
+         "F" = addcovar <- addcovar[sexChar == "F",, drop = FALSE],
+         "M" = addcovar <- addcovar[sexChar == "M",, drop = FALSE])
   if(sex_type %in% c("F","M")) {
     addcovar <- dplyr::select(addcovar, -.data$sex)
     if(ncol(addcovar) == 0)
@@ -95,7 +101,7 @@ scanfn <- function(probs_obj, phe_mx, kinship, cov_df, analyses_df, wh, models,
   
   # scan1 for wh phenotypes using their covariates.
   phe_mx <- phe_mx[, wh, drop=FALSE]
-  cov_df <- wh_covar(analyses_df, wh, cov_df)
+  cov_df <- which_covar(analyses_df, wh, cov_df)
 
   models <- models[wh]
   if(all(models == models[1])) {
@@ -173,7 +179,7 @@ scansex <- function(genoprobs, pheno, kinship, addcovar = NULL,
                })
       }
     }
-    addcovar <- covar_df_mx(addcovar)
+    addcovar <- covar_matrix(addcovar)
   }
   qtl2::scan1(genoprobs, pheno, kinship, addcovar, 
                   intcovar = intcovar,

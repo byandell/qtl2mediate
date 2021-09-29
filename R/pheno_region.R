@@ -36,6 +36,8 @@
 #' @importFrom stringr str_split
 #' @importFrom rlang .data
 #' 
+#' @export
+#' 
 pheno_region <- function(chr_id, scan_window, covar, map, 
                          peaks, analyses, pheno_data,
                          drivers = 2) {
@@ -126,6 +128,7 @@ pheno_region <- function(chr_id, scan_window, covar, map,
 #' 
 #' @seealso \code{\link{create_mrna_query_func}}
 #' @rdname pheno_region
+#' @export
 expr_region <- function(chr_id, scan_window, covar, map, 
                         project_dir, drivers = 2,
                         query_mrna = create_mrna_query_func(project_dir)) {

@@ -4,7 +4,7 @@
 #' @export
 comediator_region <- function(pheno_name, chr_id, scan_window, 
                               covar, analyses_tbl, peaks, 
-                              qtls = 2, pmap, project_info) {
+                              qtls = 2, pmap, pheno_data) {
   
   # This is specific to CCmouse.
   peaks <- dplyr::filter(peaks,
@@ -22,8 +22,8 @@ comediator_region <- function(pheno_name, chr_id, scan_window,
   
   # Read the phenos we need.
   phenos <- analyses_df$pheno
-  pheno_data <- read_project(project_info, "pheno_data", phenos)
-  
+  pheno_data <- pheno_data[, phenos, drop = FALSE]
+
   # Create comediator object.
   out <- pheno_region(chr_id, scan_window, covar, pmap,
     peaks, analyses_tbl, pheno_data, drivers = qtls)
