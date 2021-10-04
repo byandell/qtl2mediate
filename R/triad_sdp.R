@@ -1,4 +1,4 @@
-#' Locate triad for mediaton
+#' Locate triad for mediation
 #' 
 #' Given chr, pos and scan_window, target name and snpinfo,
 #' find sdp for best pattern.
@@ -22,12 +22,14 @@ triad_sdp <- function(chr, pos, scan_window,
                       snpinfo = query_variants(chr, scan_window[1], scan_window[2]),
                       ...){
   
+  # Compute SNP probabilities and update SNP info.
   snpprobs <- qtl2mediate:::get_snpprobs(chr, pos, diff(scan_window) / 2,
                                          pheno_name, 
                                          genoprobs,
                                          map,
                                          snpinfo)
   
+  # Scan SNPs based on 
   snp_scan_obj <- qtl2mediate:::scan1covar(pheno_data[, pheno_name, drop = FALSE],
                                            cov_tar,
                                            snpprobs$snpprobs, kinship,

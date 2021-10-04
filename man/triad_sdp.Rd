@@ -2,7 +2,7 @@
 % Please edit documentation in R/triad_sdp.R
 \name{triad_sdp}
 \alias{triad_sdp}
-\title{Locate triad for mediaton}
+\title{Locate triad for mediation}
 \usage{
 triad_sdp(
   chr,

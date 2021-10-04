@@ -307,9 +307,24 @@ snp_scan_obj <- qtl2mediate:::scan1covar(pheno_data, cov_tar,
 ```
 
 ```{r}
-qtl2ggplot::ggplot_scan1(snp_scan_obj, snpprobs$snpinfo, patterns = "hilit", drop_hilit = 3,
-                  haplos = snpprobs$haplos)
+qtl2ggplot::ggplot_scan1(snp_scan_obj, snpprobs$snpinfo,
+                         lodcolumn = pheno_name,
+                         patterns = "hilit", drop_hilit = 3,
+                         haplos = snpprobs$haplos,
+                         main = pheno_name)
 ```
+
+NOTE: sdp_to_pattern not working correctly
+
+```{r}
+m <- match(rownames(snp_scan_obj[snp_scan_obj[,pheno_name] >= 2.5,]), snpprobs$snpinfo$snp_id)
+table(snpprobs$snpinfo$sdp[m])
+table(qtl2mediate:::sdp_to_pattern(snpprobs$snpinfo$sdp[m], snpprobs$haplos))
+tmp <- sort(unique(snpprobs$snpinfo$sdp[m]))
+qtl2mediate:::sdp_to_pattern(tmp, snpprobs$haplos)
+```
+
+
 Want to use qtl2::top_snps instead of qtl2pattern::top_snps_pattern,
 but then have to do the work. Put this in `triad_helper()` in 'medation_triad_qtl2.R`.
 
@@ -324,9 +339,30 @@ but then have to do the work. Put this in `triad_helper()` in 'medation_triad_qt
 ```
 
 ```{r}
+qtl2mediate:::sdp_to_pattern(tmp_snps_1$sdp[1:2], haplos = snpprobs$haplos)
+```
+
+Not quite what we want here. Want top SDP and top peaks; 1 or more.
+
+```{r}
+snp_id_sdp <- dplyr::filter(snpprobs$snpinfo, sdp %in% tmp_snps_1$sdp[1:2])$snp_id
+m <- match(snp_id_sdp, rownames(snp_scan_obj), nomatch = 0)
+tmp <- as.data.frame(t(snp_scan_obj[m,]))
+dplyr::arrange(tmp, dplyr::desc(.data[[names(tmp)[1]]]))
+```
+
+
+```{r}
+qtl2ggplot::ggplot_scan1(snp_scan_obj, snpprobs$snpinfo,
+                         lodcolumn = seq_len(ncol(snp_scan_obj)),
+                         patterns = "hilit", drop_hilit = 3,
+                  haplos = snpprobs$haplos)
+```
+
+```{r}
 top_snps_tbl <- qtl2pattern::top_snps_pattern(
   snp_scan_obj,
-  snpprobs$snpinfo)
+  snpinfo_sdp)
 ```
 
 ```{r}
@@ -361,10 +397,15 @@ med_triad <- intermediate::mediation_triad(target = phe_mx,
                               fitFunction = qtl2mediate::fitQtl2)
 ```
 
+### Mediation Triad with Cover routine
+
+Look carefully at code in last section, and at `triad_sdp`. Is the goal to find
+the sdp for the best triad across mediators or is it to just look at preselected mediator?
+
 ```{r}
-sdp <- triad_sdp(chr_id, pos_Mbp,
+sdp <- qtl2mediate::triad_sdp(chr_id, pos_Mbp,
                  scan_window,
-                 pheno_name, pheno_data = phe_mx,
+                 pheno_name, pheno_data = pheno_data,
                  probs_obj$probs, probs_obj$map,
                  analyses_tbl, 
                  kinship = kinship)
@@ -373,8 +414,7 @@ sdp <- triad_sdp(chr_id, pos_Mbp,
 **Need to customize to particular mediator chosen.**
 
 ```{r}
-id <- XXX
-med_triad <- mediation_triad_qtl2(
+med_triad <- qtl2mediate::mediation_triad_qtl2(
   target = phe_mx,
   mediator = med_ls[[1]][, id, drop = FALSE],
   annotation = med_ls[[2]],
