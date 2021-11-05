@@ -14,7 +14,6 @@ mediation_test_qtl2(
   map,
   chr,
   pos,
-  kinship = NULL,
   ...
 )
 }
@@ -33,19 +32,9 @@ mediation_test_qtl2(
 
 \item{map}{list of map positions}
 
-\item{kinship}{optional kinship matrix among individuals}
+\item{chr, pos}{chromosome and position of driver}
 
-\item{...}{additional parameters for [mediation_index()]}
-
-\item{drop_lod}{drop in `LOD` (= `LR/log(10)`) to define index set}
-
-\item{min_lod}{minimum lod to consider (default \code{3})}
-
-\item{query_variant}{function to query variant database}
-
-\item{cores}{number of cores to use}
-
-\item{target_scan}{optional object from [qtl2::scan1snps()] for target (created if missing)}
+\item{...}{additional parameters for [mediation_test()]}
 }
 \value{
 Object of class `mediation_qtl2`, which inherits from class [mediation_index()]

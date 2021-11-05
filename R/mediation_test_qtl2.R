@@ -7,15 +7,10 @@
 #' @param annotation optional annotation data frame for mediators
 #' @param covar_tar optional covariates for target
 #' @param covar_med optional covariates for mediator
-#' @param kinship optional kinship matrix among individuals
 #' @param genoprobs genoprob object of class [qtl2::calc_genoprob()]
 #' @param map list of map positions
-#' @param drop_lod drop in `LOD` (= `LR/log(10)`) to define index set
-#' @param min_lod minimum lod to consider (default \code{3})
-#' @param query_variant function to query variant database
-#' @param cores number of cores to use
-#' @param target_scan optional object from [qtl2::scan1snps()] for target (created if missing)
-#' @param ... additional parameters for [mediation_index()]
+#' @param chr,pos chromosome and position of driver
+#' @param ... additional parameters for [mediation_test()]
 #'
 #' @importFrom qtl2 find_marker
 #' @importFrom intermediate mediation_test
@@ -45,7 +40,6 @@ mediation_test_qtl2 <- function(target,
                                 map,
                                 chr,
                                 pos,
-                                kinship = NULL,
                                 ...) {
   
   # Get driver as genoprobs based on chr and pos.
@@ -62,8 +56,6 @@ mediation_test_qtl2 <- function(target,
                                covar_tar,
                                covar_med,
                                driver_med = driver_med,
-                               pos = pos,
-                               kinship = kinship,
                                fitFunction = fitQtl2,
                                ...)
 }

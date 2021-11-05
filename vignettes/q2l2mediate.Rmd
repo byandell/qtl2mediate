@@ -313,18 +313,6 @@ qtl2ggplot::ggplot_scan1(snp_scan_obj, snpprobs$snpinfo,
                          haplos = snpprobs$haplos,
                          main = pheno_name)
 ```
-
-NOTE: sdp_to_pattern not working correctly
-
-```{r}
-m <- match(rownames(snp_scan_obj[snp_scan_obj[,pheno_name] >= 2.5,]), snpprobs$snpinfo$snp_id)
-table(snpprobs$snpinfo$sdp[m])
-table(qtl2mediate:::sdp_to_pattern(snpprobs$snpinfo$sdp[m], snpprobs$haplos))
-tmp <- sort(unique(snpprobs$snpinfo$sdp[m]))
-qtl2mediate:::sdp_to_pattern(tmp, snpprobs$haplos)
-```
-
-
 Want to use qtl2::top_snps instead of qtl2pattern::top_snps_pattern,
 but then have to do the work. Put this in `triad_helper()` in 'medation_triad_qtl2.R`.
 
@@ -362,7 +350,7 @@ qtl2ggplot::ggplot_scan1(snp_scan_obj, snpprobs$snpinfo,
 ```{r}
 top_snps_tbl <- qtl2pattern::top_snps_pattern(
   snp_scan_obj,
-  snpinfo_sdp)
+  snpprobs$snpinfo)
 ```
 
 ```{r}
