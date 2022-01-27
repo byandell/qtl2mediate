@@ -15,6 +15,7 @@ autoplot.listof_mediation_qtl2 <- function(x, ...)
 #' @importFrom ggplot2 autoplot
 #' @importFrom dplyr filter mutate
 #' @importFrom stats reorder
+#' @importFrom intermediate bind_mediation_index
 #' 
 #' @export
 #' @rdname mediation_qtl2
@@ -23,7 +24,7 @@ ggplot_listof_mediation_qtl2 <- function(x,
                                          minpvalue = 0.05,
                                          id_name = "mediator_id", ...) {
   # Remake listof as mediation_qtl2 object.
-  out <- bind_mediation_index(x, id_name)
+  out <- intermediate::bind_mediation_index(x, id_name)
   out$best <-
     dplyr::filter(
       out$best,

@@ -20,8 +20,9 @@
 #' @importFrom qtl2 genoprob_to_snpprob get_common_ids index_snps scan1snps top_snps
 #' @importFrom dplyr contains filter first group_by last mutate n rename right_join select summarize ungroup
 #' @importFrom ggplot2 autoplot geom_segment
+#' @importFrom intermediate mediation_index mediation_joint
 #' 
-#' @return Object of class `mediation_qtl2`, which inherits from class [mediation_index()]
+#' @return Object of class `mediation_qtl2`, which inherits from class [intermediate::mediation_index()]
 #' 
 #' @examples 
 #' dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
@@ -112,7 +113,7 @@ mediation_qtl2 <- function(target, mediator,
   # Find SNPs with joint LOD within 1.5 of peak.
   med_joint <- 
     dplyr::filter(
-      mj <- mediation_joint(
+      mj <- intermediate::mediation_joint(
         target,
         mediator,
         NULL,
@@ -125,7 +126,7 @@ mediation_qtl2 <- function(target, mediator,
   
   # Mediation test indexed by SNPs identified with med_joint.
   med_index <- 
-    mediation_index(
+    intermediate::mediation_index(
       target,
       mediator,
       NULL,
@@ -235,13 +236,13 @@ ggplot_mediation_qtl2 <- function(x, response = c("pvalue","IC"),
   
 
   response <- match.arg(response)
-  p <- ggplot_mediation_index(x, response, pattern_name = pattern_name, ...)
+  p <- intermediate::ggplot_mediation_index(x, response, pattern_name = pattern_name, ...)
   switch(
     response,
     pvalue = { 
       p <- p + 
         ggplot2::geom_segment(
-          aes(x = .data$index1, 
+          ggplot2::aes(x = .data$index1, 
               xend = .data$index2, 
               y = -log10(.data$pvalue),
               yend = -log10(.data$pvalue),
@@ -252,7 +253,7 @@ ggplot_mediation_qtl2 <- function(x, response = c("pvalue","IC"),
     IC = {
       p <- p + 
         ggplot2::geom_segment(
-          aes(x = .data$index1, 
+          ggplot2::aes(x = .data$index1, 
               xend = .data$index2, 
               y = .data$IC,
               yend = .data$IC,

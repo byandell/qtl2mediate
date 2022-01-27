@@ -10,6 +10,7 @@ triad_sdp(
   scan_window,
   pheno_name,
   pheno_data,
+  covar_tar,
   genoprobs,
   map,
   analyses_tbl,
@@ -23,6 +24,8 @@ triad_sdp(
 
 \item{pheno_name, pheno_data}{name and values of phenotype data}
 
+\item{covar_tar}{optional covariates for target}
+
 \item{genoprobs}{genotype probabilities}
 
 \item{map}{map of genome}
@@ -31,9 +34,9 @@ triad_sdp(
 
 \item{kinship}{kinship information (optional)}
 
-\item{...}{additional arguments}
+\item{snpinfo}{SNP information data frame (from user supplied \code{query_variants})}
 
-\item{snpinf}{SNP information data frame (from user supplied \code{query_variants})}
+\item{...}{additional arguments}
 }
 \description{
 Given chr, pos and scan_window, target name and snpinfo,

@@ -93,7 +93,7 @@ ggplot_mediation_qtl2(
 \item{pattern_name}{name of pattern (default \code{"pattern"})}
 }
 \value{
-Object of class `mediation_qtl2`, which inherits from class [mediation_index()]
+Object of class `mediation_qtl2`, which inherits from class [intermediate::mediation_index()]
 }
 \description{
 Test mediation across set of indexed drivers for `qtl2` data

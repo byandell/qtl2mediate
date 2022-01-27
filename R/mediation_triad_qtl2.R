@@ -7,14 +7,9 @@
 #' @param annotation optional annotation data frame for mediators
 #' @param covar_tar optional covariates for target
 #' @param covar_med optional covariates for mediator
-#' @param kinship optional kinship matrix among individuals
 #' @param genoprobs genoprob object of class [qtl2::calc_genoprob()]
 #' @param map list of map positions
-#' @param drop_lod drop in `LOD` (= `LR/log(10)`) to define index set
-#' @param min_lod minimum lod to consider (default \code{3})
-#' @param query_variant function to query variant database
-#' @param cores number of cores to use
-#' @param target_scan optional object from [qtl2::scan1snps()] for target (created if missing)
+#' @param chr,pos chromosome and position of driver
 #' @param ... additional parameters for [mediation_index()]
 #'
 #' @importFrom qtl2 find_marker
@@ -23,6 +18,7 @@
 #' @return Object of class `mediation_qtl2`, which inherits from class [mediation_index()]
 #' 
 #' @examples 
+#' \donttest{
 #' dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 #' 
 #' # Read DOex example cross from 'qtl2data'
@@ -34,6 +30,8 @@
 #' pr <- readRDS(tmpfile)
 #' unlink(tmpfile)
 #' 
+#' 
+#' }
 #' @export
 #'
 mediation_triad_qtl2 <- function(target,
@@ -45,8 +43,6 @@ mediation_triad_qtl2 <- function(target,
                                  map,
                                  chr,
                                  pos,
-                                 kinship = NULL,
-                                 sdp = NULL,
                                  ...) {
   # Get driver as genoprobs based on chr and pos.
   peak_mar <- qtl2::find_marker(map, chr, pos)
@@ -57,6 +53,5 @@ mediation_triad_qtl2 <- function(target,
                                 driver = driver, 
                                 covar_tar = covar_tar,
                                 covar_med = covar_med,
-                                kinship = kinship,
-                                sdp = sdp, ...)
+                                ...)
 }

@@ -247,7 +247,6 @@ med_scan <- intermediate::mediation_scan(
   annotation = med_ls[[2]],
   covar = cov_tar,
   kinship = kinship,
-  test = "wilc",
   fitFunction =  qtl2mediate::fitQtl2)
 ```
 
@@ -394,6 +393,7 @@ the sdp for the best triad across mediators or is it to just look at preselected
 sdp <- qtl2mediate::triad_sdp(chr_id, pos_Mbp,
                  scan_window,
                  pheno_name, pheno_data = pheno_data,
+                 covar_tar = cov_tar,
                  probs_obj$probs, probs_obj$map,
                  analyses_tbl, 
                  kinship = kinship)

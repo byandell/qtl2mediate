@@ -1,3 +1,8 @@
+#' Fit target relative to driver using qtl2 fit1
+#'
+#' Fit a model for a target and get detailed results
+#' about estimated coefficients and individuals contributions to the LOD score.
+#' 
 #' @export
 #' @importFrom qtl2 decomp_kinship fit1
 #' @importFrom stringr str_replace

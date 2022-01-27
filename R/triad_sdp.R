@@ -5,36 +5,38 @@
 #' 
 #' @param chr,pos,scan_window locators for region
 #' @param pheno_name,pheno_data name and values of phenotype data
+#' @param covar_tar optional covariates for target
 #' @param genoprobs genotype probabilities
 #' @param map map of genome
 #' @param analyses_tbl analyses table
 #' @param kinship kinship information (optional)
-#' @param snpinf SNP information data frame (from user supplied \code{query_variants})
+#' @param snpinfo SNP information data frame (from user supplied \code{query_variants})
 #' @param ... additional arguments
 #' 
 #' @export
 #' @importFrom dplyr arrange desc
+#' @importFrom rlang .data
 #' 
 triad_sdp <- function(chr, pos, scan_window,
-                      pheno_name, pheno_data,
+                      pheno_name, pheno_data, covar_tar,
                       genoprobs, map, analyses_tbl, 
                       kinship = NULL,
                       snpinfo = query_variants(chr, scan_window[1], scan_window[2]),
                       ...){
   
   # Compute SNP probabilities and update SNP info.
-  snpprobs <- qtl2mediate:::get_snpprobs(chr, pos, diff(scan_window) / 2,
+  snpprobs <- get_snpprobs(chr, pos, diff(scan_window) / 2,
                                          pheno_name, 
                                          genoprobs,
                                          map,
                                          snpinfo)
   
   # Scan SNPs based on 
-  snp_scan_obj <- qtl2mediate:::scan1covar(pheno_data[, pheno_name, drop = FALSE],
-                                           cov_tar,
+  snp_scan_obj <- scan1covar(pheno_data[, pheno_name, drop = FALSE],
+                                           covar_tar,
                                            snpprobs$snpprobs, kinship,
                                            dplyr::filter(analyses_tbl,
-                                                         pheno == pheno_name),
+                                                         .data$pheno == pheno_name),
                                            sex_type = "all")
   
   # Can I use top_snps instead of top_snps_pattern?
@@ -45,3 +47,6 @@ triad_sdp <- function(chr, pos, scan_window,
                    show_all_snps = FALSE),
     dplyr::desc(.data$lod))$sdp[1]
 }
+
+# Dummy routines. See qtl2::create_variant_query_func.
+query_variants <- function(...) {NULL}

@@ -18,6 +18,7 @@
 #' @return Object of class `mediation_qtl2`, which inherits from class [mediation_index()]
 #' 
 #' @examples 
+#' \donttest{
 #' dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 #' 
 #' # Read DOex example cross from 'qtl2data'
@@ -29,6 +30,18 @@
 #' pr <- readRDS(tmpfile)
 #' unlink(tmpfile)
 #' 
+#' med_test <- qtl2mediate::mediation_test_qtl2(
+#'   target = DOex$pheno,
+#'   mediator = DOex$pheno,
+#'   annotation = med_ls[[2]],
+#'   covar_tar = cov_tar,
+#'   covar_med = med_ls$covar,
+#'   genoprobs = probs_obj$probs,
+#'   map = probs_obj$map,
+#'   chr = chr_id,
+#'   pos = pos_Mbp,
+#'   kinship = kinship)
+#' }
 #' @export
 #'
 mediation_test_qtl2 <- function(target,

@@ -14,8 +14,6 @@ mediation_triad_qtl2(
   map,
   chr,
   pos,
-  kinship = NULL,
-  sdp = NULL,
   ...
 )
 }
@@ -34,19 +32,9 @@ mediation_triad_qtl2(
 
 \item{map}{list of map positions}
 
-\item{kinship}{optional kinship matrix among individuals}
+\item{chr, pos}{chromosome and position of driver}
 
 \item{...}{additional parameters for [mediation_index()]}
-
-\item{drop_lod}{drop in `LOD` (= `LR/log(10)`) to define index set}
-
-\item{min_lod}{minimum lod to consider (default \code{3})}
-
-\item{query_variant}{function to query variant database}
-
-\item{cores}{number of cores to use}
-
-\item{target_scan}{optional object from [qtl2::scan1snps()] for target (created if missing)}
 }
 \value{
 Object of class `mediation_qtl2`, which inherits from class [mediation_index()]
@@ -55,6 +43,7 @@ Object of class `mediation_qtl2`, which inherits from class [mediation_index()]
 Test mediation across set of indexed drivers for `qtl2` data
 }
 \examples{
+\donttest{
 dirpath <- "https://raw.githubusercontent.com/rqtl/qtl2data/master/DOex"
 
 # Read DOex example cross from 'qtl2data'
@@ -66,4 +55,6 @@ download.file(file.path(dirpath, "DOex_genoprobs_2.rds"), tmpfile, quiet=TRUE)
 pr <- readRDS(tmpfile)
 unlink(tmpfile)
 
+
+}
 }
