@@ -75,8 +75,11 @@ pheno_trans <- function(phe, phename, transform = NULL, offset = 0,
     assertthat::assert_that(length(phename) == length(winsor))
     wh <- which(winsor > 0)
     if(length(wh)) {
-      for(i in wh)
-        phe[,phename[i]] <- winsorize(unlist(phe[,phename[i]]), winsor[i])
+      for(i in wh) {
+        if(!all(is.na(tmp <- phe[,phename[i]]))) {
+          phe[,phename[i]] <- winsorize(unlist(tmp), winsor[i])
+        }
+      }
     }
   }
   phe

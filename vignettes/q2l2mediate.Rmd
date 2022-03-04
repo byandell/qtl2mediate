@@ -122,7 +122,7 @@ args("query_variants")
 str(query_variants(chr_id, scan_window[1], scan_window[2]))
 ```
 
-The `query_probs` assumes a `probdir` (default `genoprob`), which contains the FST `method` files `fst_probs.rds` (for genotype probabilities) and `fst_aprobs.rds` (for allele probabilities). These are FST master files, which point to individual FST databases by chromosome, such as `aprobs_1.fst` and `probs_1.fst`.
+The `query_probs` assumes a `probdir` (default `genoprob`), which contains the FST `method` files `probs_fstindex.rds` (for genotype probabilities) and `aprobs_fstindex.rds` (for allele probabilities). These are FST master files, which point to individual FST databases by chromosome, such as `aprobs_1.fst` and `probs_1.fst`.
 
 ```{r}
 query_probs <- qtl2pattern::create_probs_query_func(projectpath)
