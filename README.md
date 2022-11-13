@@ -1,6 +1,6 @@
-# intermediate
+# qtl2mediat
 
-`intermediate` is R package for eQTl/pQTL mediation analysis.
+`qtl2mediate` is R package for eQTl/pQTL mediation analysis.
 
 ## Installation
 
@@ -8,28 +8,14 @@ You can install `intermediate` directly from Github using `devtools` package:
 
 ```S
     # install.packages("devtools")
-    devtools::install_github("simecek/intermediate")
+    devtools::install_github("byandell/intermediate")
+    devtools::install_github("byandell/qtl2mediate")
 ```
 
 ## Example
 
 ```
-  # DOQTL liver protein expresion dataset
-  data(Tmem68)
-  
-  # Let us mediate Tmem68 to other proteins
-  med <- mediation.scan(target = Tmem68$target,
-                        mediator = Tmem68$mediator,
-                        annotation = Tmem68$annotation,
-                        covar = Tmem68$covar,
-                        qtl.geno = Tmem68$qtl.geno)
-                        
-  # Plot mediation results and identify the mediator                      
-  plot(med)                        
-  identify(med)
-  
-  # Interactive plot
-  kplot(med)
+example(mediation_qtl2)
 ```
 
 

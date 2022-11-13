@@ -1,8 +1,8 @@
 Package: qtl2mediate
 Type: Package
 Title: eQTl/pQTL Mediation analysis
-Version: 0.5.0
-Date: 2022-03-24
+Version: 0.5.2
+Date: 2022-11-13
 Author: Petr Simecek, Steven Munger, Gary Churchill, Daniel Gatti <dan.gatti@jax.org>, Brian Yandell <brian.yandell@wisc.edu>
 Maintainer: Brian Yandell <brian.yandell@wisc.edu>
 Description: Search for a mediator M that would explain D->T relationship with D genetic driver.
@@ -22,4 +22,5 @@ Suggests:
 VignetteBuilder: knitr
 License: GPL-3
 URL: https://github.com/churchill-lab/intermediate
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.2
+Encoding: UTF-8

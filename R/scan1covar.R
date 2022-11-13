@@ -11,7 +11,7 @@
 #' 
 #' @importFrom qtl2 scan1
 #' @importFrom dplyr select
-#' @importFrom stats formula model.matrix
+#' @importFrom stats as.formula formula model.matrix
 #' @importFrom rlang .data
 #' 
 #' @export

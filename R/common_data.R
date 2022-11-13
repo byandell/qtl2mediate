@@ -9,6 +9,11 @@ common_data <- function(target = NULL, mediator = NULL, driver = NULL,
   driver <- convert_matrix(driver, "D", rownames(target))
   mediator <- convert_matrix(mediator, "M", rownames(target))
   
+  # Make sure covariates are numeric
+  covar_med <- covar_matrix(covar_med)
+  covar_tar <- covar_matrix(covar_tar)
+  intcovar <- covar_matrix(intcovar)
+  
   covar_tar <- convert_matrix(covar_tar,
                               paste0("covT", seq_len(ncol(covar_tar))), 
                               rownames(target))
@@ -106,7 +111,7 @@ convert_matrix <- function(object,
                            row_names = seq_len(nrow(object))) {
   if(is.null(object))
     return(NULL)
-  
+
   if(!is.array(object))
     object <- as.matrix(object)
   stopifnot(is.numeric(object))
