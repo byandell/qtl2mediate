@@ -1,12 +1,13 @@
 #' Create list with mediators in region
 #' 
+#' @param pheno_name phenotype name
 #' @param chr_id,scan_window chromosome and start and end value
 #' @param covar covariate data frame
-#' @param map list or vector of map positions 
+#' @param analyses_tbl table of analyses
 #' @param peaks table of peaks
-#' @param analyses table of analyses
-#' @param pheno_data matrix of phenotype data
-#' @param drivers number of drivers (1 or 2; default is 2)
+#' @param qtls number of drivers (1 or 2; default is 2)
+#' @param pmap physical map
+#' @param pheno_data phenotype data
 #' 
 #' @importFrom rlang .data
 #' @importFrom dplyr filter
@@ -42,6 +43,8 @@ comediator_region <- function(pheno_name, chr_id, scan_window,
 }
 #' Get mediators of same type as pheno_name
 #' 
+#' @param comed object from `comediator_region`
+#' @param doThis do this if `TRUE`
 #' @export
 comediator_type <- function(comed, peaks, pheno_name, doThis) {
   if(doThis & !is.null(comed)) {

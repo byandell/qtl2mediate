@@ -1,4 +1,6 @@
-# Copied from github.com/kbroman/broman package
+#' Normal scores rank
+#' 
+#' Copied from github.com/kbroman/broman package
 #' @importFrom stats sd runif qnorm
 #' @export
 nqrank <- function (x, jitter = FALSE)

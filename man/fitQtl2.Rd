@@ -4,7 +4,7 @@
 \alias{fitQtl2}
 \title{Fit target relative to driver using qtl2 fit1}
 \usage{
-fitQtl2(driver, target, kinship = NULL, ...)
+fitQtl2(driver, target, kinship = NULL, sdp, allele, ...)
 }
 \description{
 Fit a model for a target and get detailed results

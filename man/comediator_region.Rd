@@ -17,19 +17,21 @@ comediator_region(
 )
 }
 \arguments{
+\item{pheno_name}{phenotype name}
+
 \item{chr_id, scan_window}{chromosome and start and end value}
 
 \item{covar}{covariate data frame}
 
+\item{analyses_tbl}{table of analyses}
+
 \item{peaks}{table of peaks}
 
-\item{pheno_data}{matrix of phenotype data}
+\item{qtls}{number of drivers (1 or 2; default is 2)}
 
-\item{map}{list or vector of map positions}
+\item{pmap}{physical map}
 
-\item{analyses}{table of analyses}
-
-\item{drivers}{number of drivers (1 or 2; default is 2)}
+\item{pheno_data}{phenotype data}
 }
 \description{
 Create list with mediators in region

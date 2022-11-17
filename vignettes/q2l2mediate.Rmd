@@ -1,12 +1,15 @@
 ---
 title: "QTL2 Mediation"
 author: "Brian Yandell"
-date: "7/5/2021"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Mediation Scans and Tests}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 7)
 ```
 
 ```{r}
@@ -20,7 +23,7 @@ These set up the phenotype and its peak location for further analysis.
 ```{r}
 chr_id <- "11"
 scan_window <- c(96,98)
-pheno_name <- "VC_top_distance_first4"
+pheno_name <- "LD_light_pct"
 peak_Mbp <- mean(scan_window)
 window_Mbp <- diff(scan_window) / 2
 ```
@@ -272,8 +275,6 @@ med_test <- qtl2mediate::mediation_test_qtl2(
   kinship = kinship)
 ```
 
-**looks like this summary is broken**
-
 ```{r}
 summary(med_test)
 ```
@@ -286,8 +287,8 @@ ggplot2::autoplot(med_test, size = 3, alpha = 1)
 
 Called from shinyTriad
 
-Arguments passed to shinyTriad, shinySNPSetup, shinySNPProbs.
-Need to check if using probs or aprobs for snpprobs.
+Basic idea is to find traits with strongest additive allele and/or SNP signal
+in the region based on scans. Then uses these to identify the best SDP(s) for further investigation with triads.
 
 ```{r}
 snpinfo <- query_variants(chr_id, scan_window[1], scan_window[2])
@@ -312,6 +313,7 @@ qtl2ggplot::ggplot_scan1(snp_scan_obj, snpprobs$snpinfo,
                          haplos = snpprobs$haplos,
                          main = pheno_name)
 ```
+
 Want to use qtl2::top_snps instead of qtl2pattern::top_snps_pattern,
 but then have to do the work. Put this in `triad_helper()` in 'medation_triad_qtl2.R`.
 
@@ -341,8 +343,20 @@ dplyr::arrange(tmp, dplyr::desc(.data[[names(tmp)[1]]]))
 
 ```{r}
 qtl2ggplot::ggplot_scan1(snp_scan_obj, snpprobs$snpinfo,
-                         lodcolumn = seq_len(ncol(snp_scan_obj)),
+                         lodcolumn = pheno_name,
                          patterns = "hilit", drop_hilit = 3,
+                  haplos = snpprobs$haplos)
+```
+
+```{r}
+qtl2ggplot::ggplot_scan1(snp_scan_obj, snpprobs$snpinfo,
+                         lodcolumn = match(c("LD_light_pct",
+                                             "LD_transitions", 
+                                             "LD_distance_light"),
+                                           colnames(snp_scan_obj)),
+                         #seq_len(ncol(snp_scan_obj))[1:2],
+                         patterns = "hilit", drop_hilit = 3,
+                         facet = "pheno",
                   haplos = snpprobs$haplos)
 ```
 
@@ -384,7 +398,7 @@ med_triad <- intermediate::mediation_triad(target = phe_mx,
                               fitFunction = qtl2mediate::fitQtl2)
 ```
 
-### Mediation Triad with Cover routine
+### Mediation Triad with Covar routine
 
 Look carefully at code in last section, and at `triad_sdp`. Is the goal to find
 the sdp for the best triad across mediators or is it to just look at preselected mediator?
@@ -424,3 +438,11 @@ summary(med_triad)
 intermediate::ggplot_mediation_triad(med_triad)
 ```
 
+```{r}
+intermediate::ggplot_mediation_triad(med_triad, fitlines = "parallel")
+```
+
+
+```{r}
+plotly::ggplotly(intermediate::ggplot_mediation_triad(med_triad, fitlines = "parallel"))
+```

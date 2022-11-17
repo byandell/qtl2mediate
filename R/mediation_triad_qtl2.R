@@ -53,5 +53,6 @@ mediation_triad_qtl2 <- function(target,
                                 driver = driver, 
                                 covar_tar = covar_tar,
                                 covar_med = covar_med,
+                                fitFunction = qtl2mediate::fitQtl2,
                                 ...)
 }

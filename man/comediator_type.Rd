@@ -6,6 +6,11 @@
 \usage{
 comediator_type(comed, peaks, pheno_name, doThis)
 }
+\arguments{
+\item{comed}{object from `comediator_region`}
+
+\item{doThis}{do this if `TRUE`}
+}
 \description{
 Get mediators of same type as pheno_name
 }

@@ -15,6 +15,7 @@ triad_sdp(
   map,
   analyses_tbl,
   kinship = NULL,
+  sex_type = "I",
   snpinfo = query_variants(chr, scan_window[1], scan_window[2]),
   ...
 )
@@ -33,6 +34,8 @@ triad_sdp(
 \item{analyses_tbl}{analyses table}
 
 \item{kinship}{kinship information (optional)}
+
+\item{sex_type}{sex type: one of `c("A","I","F","M","all")`}
 
 \item{snpinfo}{SNP information data frame (from user supplied \code{query_variants})}
 
