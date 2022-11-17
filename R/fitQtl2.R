@@ -10,8 +10,8 @@
 fitQtl2 <- function(driver,
                     target,
                     kinship = NULL,
-                    sdp, allele, # added to prevent qtl2::fit1 warning
-                    ...) {
+                    ...,
+                    sdp, allele) {  # added to prevent qtl2::fit1 warning
 
   if(is.null(rownames(driver)))
     rownames(driver) <- seq_len(nrow(driver))

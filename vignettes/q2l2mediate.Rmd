@@ -213,7 +213,7 @@ expr_ls <- get_expr_region(chr_id, scan_window[1], scan_window[2], covar, pmap,
 
 ## Mediation Test
 
-Mediation test is performed in shinyMediate. Input includes `med_ls` (from other phenotypes) or `expr_ls` (from mRNA expression data).
+Mediation test is performed in shinyMediate. Input includes `med_ls` (from other phenotypes) or `expr_ls` (from mRNA expression data). Genetic cross data has kinship information, which is important to adjust for genetic correlation among individuals.
 
 ```{r}
 kinship <- readRDS(file.path(projectpath, "kinship.rds"))[[chr_id]]
@@ -285,8 +285,7 @@ ggplot2::autoplot(med_test, size = 3, alpha = 1)
 
 ## Mediation Triad
 
-Called from shinyTriad
-
+Based on shinyTriad in [qtl2shiny](https://github.com/byandell/qtl2shiny).
 Basic idea is to find traits with strongest additive allele and/or SNP signal
 in the region based on scans. Then uses these to identify the best SDP(s) for further investigation with triads.
 
